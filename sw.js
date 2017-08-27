@@ -1,9 +1,12 @@
 console.log('sw.js');
 
-var CACHE_NAME = 'sw-learning-v1';
+const version = 5;
+const CACHE_NAME = 'sw-learning-v' + version;
+
+console.log('CACHE_NAME', CACHE_NAME);
+
 var urlsToCache = [
   '.',
-  './app.js',
   './script.js'
 ];
 
@@ -44,12 +47,12 @@ self.addEventListener('fetch', function(event) {
             return;
           }
           if (response.status !== 200) {
-            console.log('error response', response.status, 'from', fetchRequest.url);
+            console.log('non-ok response', response.status, 'from', fetchRequest.url);
             return response;
           }
           if (response.type !== 'basic') {
             console.log('non-basic response', response.type, 'from', fetchRequest.url);
-            return response;
+            // return response;
           }
 
           // important!
@@ -74,11 +77,13 @@ self.addEventListener('activate', function(event) {
 
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
-      console.log('cacheNames', cacheNames.join());
+      console.log('found caches', cacheNames.join());
       return Promise.all(
         cacheNames.map(function(cacheName) {
-          console.log('delete cache:', cacheName);
-          return caches.delete(cacheName);
+          if (cacheName !== CACHE_NAME) {
+            console.log('delete cache:', cacheName);
+            return caches.delete(cacheName);
+          }
         })
       );
     })
