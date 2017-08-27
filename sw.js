@@ -1,8 +1,8 @@
 console.log('sw.js');
 
-const version = 9;
+const version = 10.1;
 const CACHE_APP = 'sw-learning/' + version;
-const CACHE_DATA = 'sw-learning/' + version + '/' + Math.floor(Date.now() / (1000 * 60 * 60));
+const CACHE_DATA = 'sw-learning/' + version + '/data';
 const validCache = [CACHE_APP, CACHE_DATA]
 
 console.log('validCache', validCache);
