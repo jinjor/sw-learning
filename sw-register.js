@@ -1,4 +1,4 @@
-console.log('app.js', 'v5');
+console.log('sw-register.js', 'v9');
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(function(registration) {

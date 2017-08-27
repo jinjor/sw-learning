@@ -1,4 +1,4 @@
-console.log('script.js', 'v5');
+console.log('script.js', 'v9');
 
 document.getElementById('container').textContent = 'App is working!';
 

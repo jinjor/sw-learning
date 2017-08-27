@@ -1,23 +1,25 @@
 console.log('sw.js');
 
-const version = 5;
-const CACHE_NAME = 'sw-learning-v' + version;
+const version = 9;
+const CACHE_APP = 'sw-learning/' + version;
+const CACHE_DATA = 'sw-learning/' + version + '/' + Math.floor(Date.now() / (1000 * 60 * 60));
+const validCache = [CACHE_APP, CACHE_DATA]
 
-console.log('CACHE_NAME', CACHE_NAME);
-
-var urlsToCache = [
-  '.',
-  './script.js'
-];
+console.log('validCache', validCache);
 
 self.addEventListener('install', function(event) {
   console.log('install: ', event);
 
+  var urlsToCache = [
+    '.',
+    './script.js'
+  ];
+
   // tell which resources to cache
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(CACHE_APP)
     .then(function(cache) {
-      console.log('put', urlsToCache.join(), 'to cache', CACHE_NAME);
+      console.log('put', urlsToCache.join(), 'to cache', CACHE_APP);
       return cache.addAll(urlsToCache);
     }).catch(function(e) {
       console.log(e);
@@ -51,19 +53,20 @@ self.addEventListener('fetch', function(event) {
             return response;
           }
           if (response.type !== 'basic') {
-            console.log('non-basic response', response.type, 'from', fetchRequest.url);
-            // return response;
+            var responseToCache = response.clone(); // important!
+            caches.open(CACHE_DATA)
+              .then(function(cache) {
+                console.log('put resource', event.request.url, 'to cache', CACHE_DATA);
+                cache.put(event.request, responseToCache);
+              });
+          } else {
+            var responseToCache = response.clone(); // important!
+            caches.open(CACHE_APP)
+              .then(function(cache) {
+                console.log('put resource', event.request.url, 'to cache', CACHE_APP);
+                cache.put(event.request, responseToCache);
+              });
           }
-
-          // important!
-          var responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(function(cache) {
-              console.log('put response to cache', event.request.url);
-              cache.put(event.request, responseToCache);
-            });
-
           return response;
         }
       );
@@ -80,7 +83,7 @@ self.addEventListener('activate', function(event) {
       console.log('found caches', cacheNames.join());
       return Promise.all(
         cacheNames.map(function(cacheName) {
-          if (cacheName !== CACHE_NAME) {
+          if (validCache.indexOf(cacheName) < 0) {
             console.log('delete cache:', cacheName);
             return caches.delete(cacheName);
           }
