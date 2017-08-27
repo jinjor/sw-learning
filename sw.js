@@ -2,9 +2,9 @@ console.log('sw.js');
 
 var CACHE_NAME = 'sw-learning-v1';
 var urlsToCache = [
-  '/',
-  '/app.js',
-  '/script.js'
+  '.',
+  './app.js',
+  './script.js'
 ];
 
 self.addEventListener('install', function(event) {
