@@ -1,0 +1,16 @@
+{
+  "name": "sw-learning",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jinjor/sw-learning.git",
+  "author": "jinjor <jinjorweb@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server/index"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "web-push": "^3.2.2"
+  }
+}
